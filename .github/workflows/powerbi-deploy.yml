@@ -1,0 +1,26 @@
+name: Power BI CI/CD Deployment
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - powerbi/**
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Power BI deployment
+        shell: pwsh
+        run: |
+          ./powerbi/deploy/deploy.ps1 `
+            -TenantId "${{ secrets.PBI_TENANT_ID }}" `
+            -ClientId "${{ secrets.PBI_CLIENT_ID }}" `
+            -ClientSecret "${{ secrets.PBI_CLIENT_SECRET }}" `
+            -WorkspaceId "${{ secrets.PBI_WORKSPACE_ID }}" `
+            -PbixPath "powerbi/incrementalrefresh.pbix"
